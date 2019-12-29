@@ -1,0 +1,949 @@
+import numpy as np
+import random
+import pygame
+
+
+board = [[None for i in range(8)] for j in range(8)]
+
+
+
+# these classes create chess figures
+class Queen:
+
+    def __init__(self, color, position, name):
+        self.color = color
+        self.position = position
+        self.name = name
+        self.val = 90
+
+    def list_of_positions(self, position, board):
+        # The function returns list of possible positions for the Queen during the game.
+
+        position_list = []
+
+        for i in range(position[0] + 1, 8):
+            if board[i][position[1]] is None or self.color != board[i][position[1]].color:
+                position_list.append((i, position[1]))
+                if board[i][position[1]] is not None:
+                    break
+            else:
+                break
+
+        for i in range(position[0] - 1, -1, -1):
+            if board[i][position[1]] is None or self.color != board[i][position[1]].color:
+                position_list.append((i, position[1]))
+                if board[i][position[1]] is not None:
+                    break
+            else:
+                break
+
+        for i in range(position[1] + 1, 8):
+            if board[position[0]][i] is None or self.color != board[position[0]][i].color:
+                position_list.append((position[0], i))
+                if board[position[0]][i] is not None:
+                    break
+            else:
+                break
+
+        for i in range(position[1] - 1, -1, -1):
+
+            if board[position[0]][i] is None or self.color != board[position[0]][i].color:
+                position_list.append((position[0], i))
+                if board[position[0]][i] is not None:
+                    break
+            else:
+                break
+
+        for i, j in zip(range(position[0] + 1, 8), range(position[1] + 1, 8)):
+            if board[i][j] is None or self.color != board[i][j].color:
+                position_list.append((i, j))
+                if board[i][j] is not None:
+                    break
+            else:
+                break
+
+        for i, j in zip(range(position[0] - 1, -1, -1), range(position[1] - 1, -1, -1)):
+            if board[i][j] is None or self.color != board[i][j].color:
+                position_list.append((i, j))
+                if board[i][j] is not None:
+                    break
+            else:
+                break
+
+        for i, j in zip(range(position[0] - 1, -1, -1), range(position[1] + 1, 8)):
+            if board[i][j] is None or self.color != board[i][j].color:
+                position_list.append((i, j))
+                if board[i][j] is not None:
+                    break
+            else:
+                break
+
+        for i, j in zip(range(position[0] + 1, 8), range(position[1] - 1, -1, -1)):
+            if board[i][j] is None or self.color != board[i][j].color:
+                position_list.append((i, j))
+                if board[i][j] is not None:
+                    break
+            else:
+                break
+
+        return position_list
+
+
+class Rook:
+    def __init__(self, color, position, name):
+        self.color = color
+        self.position = position
+        self.name = name
+        self.val = 50
+
+    def list_of_positions(self, position, board):
+        # The function returns list of possible positions for the Rook during the game.
+
+        position_list = []
+
+        for i in range(position[0] + 1, 8):
+            if board[i][position[1]] is None or self.color != board[i][position[1]].color:
+                position_list.append((i, position[1]))
+                if board[i][position[1]] is not None:
+                    break
+            else:
+                break
+
+        for i in range(position[0] - 1, -1, -1):
+            if board[i][position[1]] is None or self.color != board[i][position[1]].color:
+                position_list.append((i, position[1]))
+                if board[i][position[1]] is not None:
+                    break
+            else:
+                break
+
+        for i in range(position[1] + 1, 8):
+            if board[position[0]][i] is None or self.color != board[position[0]][i].color:
+                position_list.append((position[0], i))
+                if board[position[0]][i] is not None:
+                    break
+            else:
+                break
+
+        for i in range(position[1] - 1, -1, -1):
+
+            if board[position[0]][i] is None or self.color != board[position[0]][i].color:
+                position_list.append((position[0], i))
+                if board[position[0]][i] is not None:
+                    break
+            else:
+                break
+
+        return position_list
+
+
+class Bishop:
+    def __init__(self, color, position, name):
+        self.color = color
+        self.position = position
+        self.name = name
+        self.val = 30
+
+    def list_of_positions(self, position, board):
+        # The function returns list of possible positions for the Bishop during the game.
+        position_list = []
+
+        for i, j in zip(range(position[0] + 1, 8), range(position[1] + 1, 8)):
+            if board[i][j] is None or self.color != board[i][j].color:
+                position_list.append((i, j))
+                if board[i][j] is not None:
+                    break
+            else:
+                break
+
+        for i, j in zip(range(position[0] - 1, -1, -1), range(position[1] - 1, -1, -1)):
+            if board[i][j] is None or self.color != board[i][j].color:
+                position_list.append((i, j))
+                if board[i][j] is not None:
+                    break
+            else:
+                break
+
+        for i, j in zip(range(position[0] - 1, -1, -1), range(position[1] + 1, 8)):
+            if board[i][j] is None or self.color != board[i][j].color:
+                position_list.append((i, j))
+                if board[i][j] is not None:
+                    break
+            else:
+                break
+
+        for i, j in zip(range(position[0] + 1, 8), range(position[1] - 1, -1, -1)):
+            if board[i][j] is None or self.color != board[i][j].color:
+                position_list.append((i, j))
+                if board[i][j] is not None:
+                    break
+            else:
+                break
+
+        return position_list
+
+
+class Knight:
+    def __init__(self, color, position, name):
+        self.color = color
+        self.position = position
+        self.name = name
+        self.val = 30
+
+    def list_of_positions(self, position, board):
+        # The function returns list of possible positions for the Knight during the game.
+        position_list = []
+
+        for i in range(position[0] - 2, position[0] + 3):
+            for j in range(position[1] - 2, position[1] + 3):
+                if - 1 < i < 8 and - 1 < j < 8 and abs((position[0] - i) * (position[1] - j)) == 2:
+                    if board[i][j] is None or self.color != board[i][j].color:
+
+
+                        position_list.append((i, j))
+
+        return position_list
+
+
+class King:
+    def __init__(self, color, position, name):
+        self.color = color
+        self.position = position
+        self.name = name
+        self.val = 1000
+
+    def list_of_positions(self, position, board):
+        # The function returns list of possible positions for the King during the game.
+        position_list = []
+
+        for i in range(position[0] - 1, position[0] + 2):
+            for j in range(position[1] - 1, position[1] + 2):
+                if - 1 < i < 8 and - 1 < j < 8 and abs(position[0] - i) + abs(position[1] - j) != 0:
+                    if board[i][j] is None or self.color != board[i][j].color:
+
+                        position_list.append((i, j))
+
+        return position_list
+
+
+class Pawn:
+    def __init__(self, color, position, name, direction):
+        self.color = color
+        self.position = position
+        self.name = name
+        self.val = 10
+        self.direction = direction
+    def list_of_positions(self, position, board):
+        # The function returns list of possible positions for the Pawn during the game.
+
+        position_list = []
+
+
+        if self.direction != 0:
+            drt_factor = - 1
+        else:
+            drt_factor = 1
+        if self.color == 'white':
+            if position[1] < 7:
+                if board[position[0]][position[1] + 1 * drt_factor] is None:
+                    position_list.append((position[0], position[1] + 1 * drt_factor))
+
+                if position[0] > 0 and board[position[0] - 1][position[1] + 1 * drt_factor] is not None and \
+                        board[position[0] - 1][position[1] + 1 * drt_factor].color != 'white':
+                    position_list.append((position[0] - 1, position[1] + 1 * drt_factor))
+
+                if position[0] < 7 and board[position[0] + 1][position[1] + 1 * drt_factor] is not None and \
+                        board[position[0] + 1][position[1] + 1 * drt_factor].color != 'white':
+                    position_list.append((position[0] + 1, position[1] + 1 * drt_factor))
+
+                if position[1] == abs(1 - self.direction) and board[position[0]][position[1] + 2 * drt_factor] is None and board[position[0]][position[1] + 1 * drt_factor] is None:
+                    position_list.append((position[0], position[1] + 2 * drt_factor))
+
+        if self.color == 'black':
+            if position[1] > 0:
+                if board[position[0]][position[1] - 1 * drt_factor] is None:
+                    position_list.append((position[0], position[1] - 1 * drt_factor))
+
+                if position[0] > 0 and board[position[0] - 1][position[1] - 1 * drt_factor] is not None and board[position[0] - 1][position[1] - 1 * drt_factor].color != self.color:
+                    position_list.append((position[0] - 1, position[1] - 1 * drt_factor))
+
+                if position[0] < 7 and board[position[0] + 1][position[1] - 1 * drt_factor] is not None and board[position[0] + 1][position[1] - 1 * drt_factor].color != self.color:
+                    position_list.append((position[0] + 1, position[1] - 1 * drt_factor))
+
+                if position[1] == abs(6 - self.direction) and board[position[0]][position[1] - 2 * drt_factor] is None and board[position[0]][position[1] - 1 * drt_factor] is None:
+                    position_list.append((position[0], position[1] - 2 * drt_factor))
+
+        return position_list
+
+def initialize_figures(a, board):
+    # The function creates chess figures instances, it places them on a chess board before the game.
+
+    WK = King('white', (abs(4 - a), abs(0 - a)), 'Wking')
+    WQ = Queen('white', (abs(3 - a), abs(0 - a)), 'Wqueen')
+    WBq = Bishop('white', (abs(2 - a), abs(0 - a)), 'WQbishop')
+    WBk = Bishop('white', (abs(5 - a), abs(0 - a)), 'WKbishop')
+    WKNq = Knight('white', (abs(1 - a), abs(0 - a)), 'WQknight')
+    WKNk = Knight('white', (abs(6 - a), abs(0 - a)), 'WKknight')
+    WRq = Rook('white', (abs(0 - a), abs(0 - a)), 'WQrook')
+    WRk = Rook('white', (abs(7 - a), abs(0 - a)), 'WKrook')
+
+    wp_1 = Pawn('white', (abs(0 - a), abs(1 - a)), 'w1_pawn', a)
+    wp_2 = Pawn('white', (abs(1 - a), abs(1 - a)), 'w2_pawn', a)
+    wp_3 = Pawn('white', (abs(2 - a), abs(1 - a)), 'w3_pawn', a)
+    wp_4 = Pawn('white', (abs(3 - a), abs(1 - a)), 'w4_pawn', a)
+    wp_5 = Pawn('white', (abs(4 - a), abs(1 - a)), 'w5_pawn', a)
+    wp_6 = Pawn('white', (abs(5 - a), abs(1 - a)), 'w6_pawn', a)
+    wp_7 = Pawn('white', (abs(6 - a), abs(1 - a)), 'w7_pawn', a)
+    wp_8 = Pawn('white', (abs(7 - a), abs(1 - a)), 'w8_pawn', a)
+
+    BK = King('black', (abs(4 - a), abs(7 - a)), 'Bking')
+    BQ = Queen('black', (abs(3 - a), abs(7 - a)), 'Bqueen')
+    BBq = Bishop('black', (abs(2 - a), abs(7 - a)), 'BQbishop')
+    BBk = Bishop('black', (abs(5 - a), abs(7 - a)), 'BKbishop')
+    BKNq = Knight('black', (abs(1 - a), abs(7 - a)), 'BQknight')
+    BKNk = Knight('black', (abs(6 - a), abs(7 - a)), 'BKknight')
+    BRq = Rook('black', (abs(0 - a), abs(7 - a)), 'RQrook')
+    BRk = Rook('black', (abs(7 - a), abs(7 - a)), 'RKrook')
+
+    bp_1 = Pawn('black', (abs(0 - a), abs(6 - a)), 'b1_pawn', a)
+    bp_2 = Pawn('black', (abs(1 - a), abs(6 - a)), 'b2_pawn', a)
+    bp_3 = Pawn('black', (abs(2 - a), abs(6 - a)), 'b3_pawn', a)
+    bp_4 = Pawn('black', (abs(3 - a), abs(6 - a)), 'b4_pawn', a)
+    bp_5 = Pawn('black', (abs(4 - a), abs(6 - a)), 'b5_pawn', a)
+    bp_6 = Pawn('black', (abs(5 - a), abs(6 - a)), 'b6_pawn', a)
+    bp_7 = Pawn('black', (abs(6 - a), abs(6 - a)), 'b7_pawn', a)
+    bp_8 = Pawn('black', (abs(7 - a), abs(6 - a)), 'b8_pawn', a)
+
+
+
+    white_figures = [WK, WQ, WBq, WBk, WKNq, WKNk, WRq, WRk, wp_1, wp_2, wp_3, wp_4, wp_5, wp_6, wp_7, wp_8]
+
+    black_figures = [BK, BQ, BBq, BBk, BKNq, BKNk, BRq, BRk, bp_1, bp_2, bp_3, bp_4, bp_5, bp_6, bp_7, bp_8]
+
+    for i,j in zip(white_figures,black_figures):
+        board[abs(i.position[0])][abs(i.position[1])] = i
+        board[abs(j.position[0])][abs(j.position[1])] = j
+
+    board = np.asarray(board)
+
+
+    return board, white_figures, black_figures
+
+
+
+
+
+
+
+game_development = []
+
+
+def figure_movements(computer, opponent, board, figure, destination, direction, game_development):
+
+    # This function is responsable for the figure moves during the game, it change the position of figure
+    # function creates tracking history of the game
+    # It removes figures if necessary.
+
+    if direction == 'positive':
+        if board[destination[0]][destination[1]] is not None:
+            old_position = figure.position
+            develop = (figure, old_position, board[destination[0]][destination[1]])
+            game_development.append(develop)
+            rem_figure = board[destination[0]][destination[1]]
+            # print('this is rem figure', rem_figure, rem_figure.color)
+            opponent.remove(rem_figure)
+
+
+        else:
+            developp = (figure, figure.position, None)
+            game_development.append(developp)
+
+        board[figure.position[0]][figure.position[1]] = None
+        figure.position = destination
+        board[figure.position[0]][figure.position[1]] = figure
+
+    else:
+
+
+        if game_development[-1][2] is not None:
+            board[game_development[-1][2].position[0]][game_development[-1][2].position[1]] = game_development[-1][2]
+            opponent.append(game_development[-1][2])
+        else:
+            board[game_development[-1][0].position[0]][game_development[-1][0].position[1]] = None
+
+        game_development[-1][0].position = game_development[-1][1]
+        board[game_development[-1][0].position[0]][game_development[-1][0].position[1]] = game_development[-1][0]
+
+        game_development.pop()
+
+    return game_development, board, opponent
+
+
+
+
+def possible_moves(whitz, blackz, board):
+    # This function returns a total list of possible moves for  each player's figures on the board.
+
+    possible_moves = {}
+    random.shuffle(whitz)
+    for i in whitz:
+        possible_moves.update({i: i.list_of_positions(i.position, board)})
+
+    return possible_moves
+
+
+
+
+
+
+def  chess_minimax(num_moves, alpha, beta, player_turn, white, black, board, game_development):
+
+    # This function is chess minimax algorithm that returns highest score for the move that was given it
+    # from computer_mind function.
+
+    if num_moves == 0:
+        position_score = game_state_evaluation(white, black, board)
+        return position_score
+
+
+    if player_turn:
+
+        list_of_moves = possible_moves(white, black, board)
+
+        top_move = -100000
+
+        for i in list_of_moves:
+            for j in list_of_moves[i]:
+                game_development, board, black = figure_movements(white, black, board, i, j, 'positive', game_development)
+
+                top_move = max(top_move, chess_minimax(num_moves - 1, alpha, beta, False, white, black, board, game_development))
+
+                game_development, board, black = figure_movements(white, black, board, i, j, 'negative',
+                                                                      game_development)
+
+                alpha = max(alpha, top_move)
+
+                if beta <= alpha:
+                    return top_move
+
+        return top_move
+
+
+
+    else:
+
+        list_of_moves = possible_moves(black, white, board)
+
+        top_move = 100000
+
+        for i in list_of_moves:
+            for j in list_of_moves[i]:
+                game_development, board, white = figure_movements(black, white, board, i, j, 'positive',
+                                                                     game_development)
+
+                top_move = min(top_move, chess_minimax(num_moves - 1, alpha, beta, True, white, black, board,
+                                                       game_development))
+
+                game_development, board, white = figure_movements(black, white, board, i, j, 'negative',
+                                                                     game_development)
+
+                beta = min(beta, top_move)
+
+                if beta <= alpha:
+                    return top_move
+
+        return top_move
+
+
+def game_state_evaluation(player, enemy, the_board):
+    # This function evaluates game state for chess_minimax function.
+
+    player_score = 0
+    enemy_score = 0
+    for i in player:
+        player_score += i.val
+        num_positions = 0
+        if type(i) == Rook or type(i) == Bishop:
+            for pos in i.list_of_positions(i.position, the_board):
+                num_positions = num_positions + 1
+
+            player_score += num_positions * 0.2
+
+    for j in enemy:
+        enemy_score += j.val
+        enem_num_pos = 0
+        if type(j) == Rook or type(j) == Bishop:
+            for x in j.list_of_positions(j.position, the_board):
+                enem_num_pos = enem_num_pos + 1
+
+            enemy_score += enem_num_pos * 0.2
+
+
+    return player_score - enemy_score
+
+
+
+
+
+
+
+def computer_mind(num_moves, wh, bk, board, game_development):
+    # This function makes final decision for the next move based on chess_minimax evaluations.
+
+    list_of_moves = possible_moves(wh, bk, board)
+    top_score = - 1000000
+    smart_move = []
+
+    for y in list_of_moves:
+        for move in list_of_moves[y]:
+            game_development, board, bk = figure_movements(wh, bk, board, y, move, 'positive',
+                                                                 game_development)
+
+            score = max(top_score, chess_minimax(num_moves - 1, -100000, 100000, False, wh, bk, board, game_development))
+
+            game_development, board, bk = figure_movements(wh, bk, board, y, move, 'negative',
+                                                                 game_development)
+            if score > top_score:
+                top_score = score
+
+                smart_move = y, move
+
+
+
+    return smart_move[0], smart_move[1]
+
+# ---------------------------------------------------------------------------
+
+pygame.init()
+chess_board_gui = pygame.display.set_mode((840, 840))
+
+
+pygame.display.set_caption('PyChess')
+clock = pygame.time.Clock()
+whitee = (255,255,255)
+all_tiles = []
+
+
+white_king = pygame.image.load('white_king.png')
+white_k = pygame.transform.scale(white_king,(100,100))
+
+
+white_queen = pygame.image.load('white_queen.png')
+white_queen = pygame.transform.scale(white_queen,(100,100))
+
+white_rook = pygame.image.load('white_rook.png')
+white_rook = pygame.transform.scale(white_rook,(100,100))
+
+white_bishop = pygame.image.load('white_bishop.png')
+white_bishop = pygame.transform.scale(white_bishop,(100,100))
+
+white_knight = pygame.image.load('white_knight.png')
+white_knight = pygame.transform.scale(white_knight,(100,100))
+
+white_pawn = pygame.image.load('white_pawn.png')
+white_pawn = pygame.transform.scale(white_pawn,(100,100))
+
+black_king = pygame.image.load('black_king.png')
+black_king = pygame.transform.scale(black_king,(100,100))
+
+black_queen = pygame.image.load('black_queen.png')
+black_queen = pygame.transform.scale(black_queen,(100,100))
+
+black_rook = pygame.image.load('black_rook.png')
+black_rook = pygame.transform.scale(black_rook,(100,100))
+
+black_knight = pygame.image.load('black_knight.png')
+black_knight = pygame.transform.scale(black_knight,(100,100))
+
+black_bishop = pygame.image.load('black_bishop.png')
+black_bishop = pygame.transform.scale(black_bishop,(100,100))
+
+black_pawn = pygame.image.load('black_pawn.png')
+black_pawn = pygame.transform.scale(black_pawn,(100,100))
+
+cover_pic = pygame.image.load('intro_chess.png')
+cover_pic = pygame.transform.scale(cover_pic,(840,840))
+
+
+
+
+def squares(surface, x, y, w, h, color):
+    # This function draws chess square on the chess board
+
+    pygame.draw.rect(surface, color, [x, y, w, h])
+    all_tiles.append([color, [x, y, w, h]])
+
+
+def drawChessPieces(board_state):
+
+    # This function draws the chess board and it places figure images on the board.
+    xpos = 0
+    ypos = 0
+    color = None
+    width = 100
+    height = 100
+    blackc = (45,45,45)
+    whitee = (255,255,255)
+    letters = 'abcdefjh'
+    numbers = '12345678'
+    board_area = pygame.Surface((840,840))
+
+    white_pawn = pygame.image.load('white_pawn.png')
+    white_pawn = pygame.transform.scale(white_pawn, (100, 100))
+
+    black_pawn = pygame.image.load('black_pawn.png')
+    black_pawn = pygame.transform.scale(black_pawn, (100, 100))
+
+    for i in range(8):
+        font = pygame.font.SysFont('Calibri', 20, True, False)
+        letter = font.render(letters[i], True, blackc)
+        number = font.render(numbers[i], True, blackc)
+        number = pygame.transform.rotate(number, 180)
+        # letter = pygame.transform.rotate(letter, 90)
+        chess_board_gui.blit(letter, [i * 100 + 20 + width / 2, 820])
+
+
+        for j in range(8):
+            if (i + j) % 2 == 0:
+                squares(board_area, i * 100 + 20, j * 100 + 20, width, height, blackc)
+                if board_state[i][j] is not None:
+
+                    if type(board_state[i][j]) == Pawn:
+                        if board_state[i][j].color == 'white':
+                            # white_pawn = pygame.transform.rotate(white_pawn, 180)
+                            board_area.blit(white_pawn, (i * 100 + 20, j * 100 + 20))
+                        else:
+                            # black_pawn = pygame.transform.rotate(black_pawn, 180)
+                            board_area.blit(black_pawn, (i * 100 + 20, j * 100 + 20))
+
+                    elif type(board_state[i][j]) == Bishop:
+                        if board_state[i][j].color == 'white':
+                            board_area.blit(white_bishop, (i * 100 + 20, j * 100 + 20))
+                        else:
+                            board_area.blit(black_bishop, (i * 100 + 20, j * 100 + 20))
+
+                    elif type(board_state[i][j]) == Knight:
+                        if board_state[i][j].color == 'white':
+                            board_area.blit(white_knight, (i * 100 + 20, j * 100 + 20))
+                        else:
+                            board_area.blit(black_knight, (i * 100 + 20, j * 100 + 20))
+
+                    elif type(board_state[i][j]) == Rook:
+                        if board_state[i][j].color == 'white':
+                            board_area.blit(white_rook, (i * 100 + 20, j * 100 + 20))
+                        else:
+                            board_area.blit(black_rook, (i * 100 + 20, j * 100 + 20))
+
+                    elif type(board_state[i][j]) == King:
+                        if board_state[i][j].color == 'white':
+                            board_area.blit(white_k, (i * 100 + 20, j * 100 + 20))
+                        else:
+                            board_area.blit(black_king, (i * 100 + 20, j * 100 + 20))
+
+                    elif type(board_state[i][j]) == Queen:
+                        if board_state[i][j].color == 'white':
+                            board_area.blit(white_queen, (i * 100 + 20, j * 100 + 20))
+                        else:
+                            board_area.blit(black_queen, (i * 100 + 20, j * 100 + 20))
+
+
+
+
+
+
+
+            else:
+                squares(board_area, i * 100 + 20, j * 100 + 20, width, height, whitee)
+
+                if board_state[i][j] is not None:
+
+                    if type(board_state[i][j]) == Pawn:
+                        if board_state[i][j].color == 'white':
+                            board_area.blit(white_pawn, (i * 100 + 20, j * 100 + 20))
+                        else:
+                            board_area.blit(black_pawn, (i * 100 + 20, j * 100 + 20))
+
+                    elif type(board_state[i][j]) == Bishop:
+                        if board_state[i][j].color == 'white':
+                            board_area.blit(white_bishop, (i * 100 + 20, j * 100 + 20))
+                        else:
+                            board_area.blit(black_bishop, (i * 100 + 20, j * 100 + 20))
+
+                    elif type(board_state[i][j]) == Knight:
+                        if board_state[i][j].color == 'white':
+                            board_area.blit(white_knight, (i * 100 + 20, j * 100 + 20))
+                        else:
+                            board_area.blit(black_knight, (i * 100 + 20, j * 100 + 20))
+
+                    elif type(board_state[i][j]) == Rook:
+                        if board_state[i][j].color == 'white':
+                            board_area.blit(white_rook, (i * 100 + 20, j * 100 + 20))
+                        else:
+                            board_area.blit(black_rook, (i * 100 + 20, j * 100 + 20))
+
+                    elif type(board_state[i][j]) == King:
+                        if board_state[i][j].color == 'white':
+                            board_area.blit(white_k, (i * 100 + 20, j * 100 + 20))
+                        else:
+                            board_area.blit(black_king, (i * 100 + 20, j * 100 + 20))
+
+                    elif type(board_state[i][j]) == Queen:
+                        if board_state[i][j].color == 'white':
+                            board_area.blit(white_queen, (i * 100 + 20, j * 100 + 20))
+                        else:
+                            board_area.blit(black_queen, (i * 100 + 20, j * 100 + 20))
+
+    # board_area = pygame.transform.rotate(board_area, 180)
+    chess_board_gui.blit(board_area, (0, 0))
+
+
+
+
+def chess_game(youPlay, computerPlay, fst_mov_flag, board):
+    # This function is chess game.
+    # It updates the screen so you are able to see the game on the screen.
+    # It takes the retun from computer_mind function to make a move for the computer.
+    # It takes input from the human player to make a move for the human player.
+    while True:
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        chess_board_gui.fill((215, 215, 215))
+        pygame.display.set_caption('Chess')
+        pygame.display.set_icon(white_king)
+
+
+        drawChessPieces(board)
+
+
+        if fst_mov_flag:
+
+
+
+            figure, next_move = computer_mind(4, computerPlay, youPlay, board, game_development)
+
+            board[figure.position[0]][figure.position[1]] = None
+
+            if board[next_move[0]][next_move[1]] is not None:
+                youPlay.remove(board[next_move[0]][next_move[1]])
+
+            old_position = figure.position
+            develop = (figure, old_position, board[next_move[0]][next_move[1]])
+            board[next_move[0]][next_move[1]] = figure
+            game_development.append(develop)
+            figure.position = next_move
+
+            list_of_pstns = figure.list_of_positions(figure.position, board)
+
+            for i in list_of_pstns:
+                psb_king = board[i[0]][i[1]]
+                if type(psb_king) == King and figure.color != psb_king.color:
+                    game_status = check_mate(computerPlay,youPlay, board, game_development, psb_king)
+                    message_scene(400, 400, 200, 50, (200,0,0), (0,0,0), game_status, board)
+                    print(game_status)
+                    #print('CHECK')
+
+        drawChessPieces(board)
+        pygame.display.update()
+# ---------------------------------------------------------------------------------------
+
+        clicked = True
+        while clicked:
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+
+                    mouse1 = pygame.mouse.get_pos()
+                    click = pygame.mouse.get_pressed()
+
+                    x1 = abs(((mouse1[0] - 20) // 100) - 0)
+                    y1 = abs(((mouse1[1] - 20) // 100) - 0)
+
+                    figure = board[x1][y1]
+                    if figure in youPlay:
+                        print(figure.list_of_positions(figure.position, board))
+                        wait = True
+                        while wait:
+                            for clickd in pygame.event.get():
+
+                                if clickd.type == pygame.MOUSEBUTTONDOWN:
+                                    mouse2 = pygame.mouse.get_pos()
+                                    click1 = pygame.mouse.get_pressed()
+
+                                    x2 = abs(((mouse2[0] - 20) // 100) - 0)
+                                    y2 = abs(((mouse2[1] - 20) // 100) - 0)
+
+                                    next_move = (x2, y2)
+
+                                    if board[next_move[0]][next_move[1]] is not None and figure.color == \
+                                            board[next_move[0]][next_move[1]].color:
+                                        figure = board[next_move[0]][next_move[1]]
+
+                                    if next_move in figure.list_of_positions(figure.position, board):
+                                        clicked = False
+                                        wait = False
+
+
+        fst_mov_flag = True
+        board[figure.position[0]][figure.position[1]] = None
+
+        if board[next_move[0]][next_move[1]] is not None:
+            computerPlay.remove(board[next_move[0]][next_move[1]])
+
+        old_position = figure.position
+        develop = (figure, old_position, board[next_move[0]][next_move[1]])
+        board[next_move[0]][next_move[1]] = figure
+        game_development.append(develop)
+        figure.position = next_move
+
+        list_of_moves = figure.list_of_positions(figure.position, board)
+
+        for i in list_of_moves:
+            psbl_king = board[i[0]][i[1]]
+            if type(psbl_king) == King and figure.color != psbl_king.color:
+                decision = check_mate(youPlay, computerPlay, board, game_development, psbl_king)
+                message_scene(400, 400, 200, 50, (200,0,0), (0,0,0), decision, board)
+                print(decision)
+
+
+
+        drawChessPieces(board)
+        pygame.display.update()
+        clock.tick(15)
+
+
+
+red = (255,0,0)
+light_red = (200,0,0)
+black = (0,0,0)
+white = (255,255,255)
+
+
+def button(x, y, width, height, color1, color2, lt_color, label, board, choise=None):
+    # This function draws the buttons for game_intro function.
+
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+
+    if x + width > mouse[0] > x and y + height > mouse[1] > y:
+        pygame.draw.rect(chess_board_gui, color2, (x, y, width, height))
+        if click[0] == 1 and choise is not None:
+            if choise == 'white':
+                board, white_figures, black_figures = initialize_figures(7, board)
+                chess_game(white_figures, black_figures, False, board)
+            elif choise == 'black':
+                board, white_figures, black_figures = initialize_figures(0, board)
+                chess_game(black_figures, white_figures, True, board)
+
+
+    else:
+        pygame.draw.rect(chess_board_gui, color1, (x, y, width, height))
+
+    font = pygame.font.SysFont('Calibri', 50, True, False)
+    title = font.render(label, True, lt_color)
+    chess_board_gui.blit(title, [(x+5), (y+5)])
+
+
+
+
+def game_intro():
+
+    # This function creates intro screen before the game with buttons, so player can choose the side.
+    intro = True
+
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        chess_board_gui.fill(whitee)
+        chess_board_gui.blit(cover_pic, (0, 0))
+        button(80, 600, 150, 50, red, light_red, white, 'White', board, choise='white')
+        button(610, 600, 150, 50, red, light_red, black, 'Black', board, choise='black')
+
+
+        pygame.display.update()
+        clock.tick(15)
+
+
+
+
+def check_mate(human, ai_player, chess_board, game_history, enemy_king):
+
+    # This function check the game state for CHECK and CHECKMATE.
+
+    new_board = chess_board.copy()
+    new_history = game_history.copy()
+    human_player = human.copy()
+
+    chess_piece, next_step = computer_mind(2, ai_player, human_player, new_board, new_history)
+
+    new_board[chess_piece.position[0]][chess_piece.position[1]] = None
+
+    if new_board[next_step[0]][next_step[1]] is not None:
+        human_player.remove(new_board[next_step[0]][next_step[1]])
+
+    new_board[next_step[0]][next_step[1]] = chess_piece
+
+    for i in human_player:
+
+        piece_positions = i.list_of_positions(i.position, new_board)
+
+        for j in piece_positions:
+
+            if new_board[j[0]][j[1]] == enemy_king:
+                # message_scene(400, 400, 200, 50, light_red, black, 'CheckMate Congratulations You Won')
+
+                return 'CheckMate Congratulations You Won'
+
+
+    return 'CHECK'
+
+
+def message_scene(x, y, width, height, collor, text_color, message, chessboard):
+    scenexit = False
+    timme = 10000
+
+    while not scenexit:
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        chess_board_gui.fill((215, 215, 215))
+        pygame.display.set_caption('Chess')
+        pygame.display.set_icon(white_king)
+
+        drawChessPieces(chessboard)
+        message_box(x, y, width, height, collor, text_color, message)
+
+        pygame.display.update()
+
+        passed_time = clock.tick(15)
+        timme -= passed_time
+        if timme <= 0:
+            scenexit = True
+
+
+
+def message_box(x, y, width, height, color, text_color, message):
+
+    pygame.draw.rect(chess_board_gui, color, (x, y, width, height))
+
+    font = pygame.font.SysFont('Calibri', 50, True, False)
+    title = font.render(message, True, text_color)
+    chess_board_gui.blit(title, [(x + 5), (y + 5)])
+
+
+
+
+game_intro()
